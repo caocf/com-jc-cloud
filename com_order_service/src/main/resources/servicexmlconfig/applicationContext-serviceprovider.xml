@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+	<!-- Application name -->
+
+	<dubbo:application name="order_provider" 
+					  owner="attitudedecidesall-126.com" 
+					  organization="IT-Center"
+					  logger="log4j"/>
+	<dubbo:module name="OrderService"
+				  version="1.0.0"
+				  owner="attitudedecidesall-126.com"/>
+ 	<dubbo:protocol host="${dubbo.host}" port="${dubbo.port}" threads="200"  name="dubbo"
+ 					accepts="100"
+ 					payload="88388608"/>
+	<!-- sticky类似于session的处理方式，不解释
+		 tocken="true" 防止消费方绕过注册中心调用provider
+	 -->
+	<!-- 服务线程池的大小 -->
+	<dubbo:registry address="${zookeeper.registry}"
+					 timeout="5000" 
+					 check="true"
+					 file="${user.home}/output/provider.cache"
+					 register="true" />
+
+	<!-- 相关的超时配置尽量在provider -->
+	<dubbo:service
+		owner="jackychen"
+		interface="com.jc.order.service.bussiness.order.IFirstDubboService"
+		version="1.0.0"
+		ref="firstDubboService"
+		timeout="3000"
+		retries="2"
+		delay="-1" 
+		loadbalance="random"
+		actives="0"
+ 
+		executes="200"/>
+		<!-- token="true" 防止消费者绕过注册中心调用服务方 -->
+		<!--  	timeout，方法调用超时-->
+		<!-- 延迟到spring初始化完成以后 -->
+		<!--  retries，失败重试次数，缺省是2（表示加上第一次调用，会调用3次）
+		loadbalance，负载均衡算法（有多个Provider时，如何挑选Provider调用），缺省是随机（random）。
+		还可以有轮训(roundrobin)、最不活跃优先（leastactive，指从Consumer端并发调用最好的Provider，可以减少的反应慢的Provider的调用，因为反应更容易累积并发的调用）
+		actives，消费者端，最大并发调用限制，即当Consumer对一个服务的并发调用到上限后，新调用会Wait直到超时。
+		在方法上配置（dubbo:method ）则并发限制针对方法，在接口上配置（dubbo:service），则并发限制针对服务
+		-->
+		<!-- 1:当一种方法有多种实现时候，请在service中添加group="",消费时候一样 -->
+		<!-- 2:当一种方法有多个版本的时候，请用version="1.0.0" -->
+		<!-- 3:防止被误调用，registry="false"在dubbo:registy上使用 -->
+		<!-- 4:不同的多协议配置，<dubbo:protocol name="dubbo" port="20880"/> <dubbo:protocol 
+			name="rmi" port="1099"/> <dubbo:service interface="**" ref="**" protocol="dubbo"/> 
+			<dubbo:service interface="**" ref="**" protocol="rmi"/> -->
+		<!-- <dubbo:protocol name="dubbo" port="9090" server="netty" client="netty" 
+			codec="dubbo" serialization="hessian2" charset="UTF-8" threadpool="fixed" 
+			threads="100" queues="0" iothreads="9" buffer="8192" accepts="1000" payload="8388608" 
+			/> -->
+</beans>    
