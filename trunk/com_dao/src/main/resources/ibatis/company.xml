@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.jc.domain.CompanyEntity">
+	<typeAlias alias="companyEntity" type="com.jc.domain.CompanyEntity" />
+	<resultMap id="companyFieldList" class="com.jc.domain.CompanyEntity">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="companyFieldList.columns">
+	    <![CDATA[
+        id, name
+	    ]]>
+	</sql>
+
+	<!-- 新增记录 -->
+	<insert id="save" parameterClass="companyEntity">
+	    <![CDATA[
+	        INSERT INTO company (
+	        	name
+	        ) VALUES ( 
+	        	#name#
+	        )
+	    ]]>
+	<selectKey resultClass="java.lang.Integer" type="post"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	<!-- 通过ID修改 -->
+	<update id="update" parameterClass="companyEntity">
+	    <![CDATA[
+	        UPDATE company SET 
+		        name = #name#
+	        WHERE 
+		        id = #id#
+	    ]]>
+	</update>
+
+	<!-- 通过ID删除 -->
+	<delete id="delete">
+	    <![CDATA[
+	        DELETE FROM company WHERE
+	        id = #id#
+	    ]]>
+	</delete>
+
+	<!-- 通过ID列表批量删除 -->
+	<delete id="deleteByIds" parameterClass="java.lang.String">
+	    <![CDATA[
+	        DELETE FROM company WHERE
+	        id IN ($ids$)
+	    ]]>
+	</delete>
+
+	<!-- 通过ID查询 -->
+	<select id="getById" resultMap="companyFieldList">
+		SELECT
+		<include refid="companyFieldList.columns" />
+	    <![CDATA[
+	        FROM company 
+	        WHERE 
+		        id = #id#
+	    ]]>
+	</select>
+
+	
+
+	<!-- 查询所有记录 -->
+	<select id="queryAll" resultMap="companyFieldList">
+		SELECT
+		<include refid="companyFieldList.columns" />
+	    <![CDATA[
+		    FROM company
+	    ]]>
+	</select>
+
+	<parameterMap id="parameterMap" class="java.util.HashMap">
+		<parameter property="id" />
+		<parameter property="name" />
+	</parameterMap>
+	<sql id="sql_count">
+		select count(*)
+	</sql>
+	<sql id="sql_select">
+		select *
+	</sql>
+	<sql id="sql_where">
+		from company
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="id">
+		            <![CDATA[
+					id = #id#
+		            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="name">
+		            <![CDATA[
+					name = #name#
+		            ]]>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<select id="queryByMap" parameterMap="parameterMap" resultMap="companyFieldList">
+		<include refid="sql_select" />
+		<include refid="sql_where" />
+	</select>
+</sqlMap>

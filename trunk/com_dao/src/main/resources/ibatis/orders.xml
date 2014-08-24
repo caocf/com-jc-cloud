@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.jc.domain.OrdersEntity">
+	<typeAlias alias="OrdersEntity" type="com.jc.domain.OrdersEntity" />
+	<resultMap id="ordersFieldList" class="com.jc.domain.OrdersEntity">
+		<result property="id" column="id" />
+		<result property="customerid" column="customer_id" />
+		<result property="status" column="status" />
+		<result property="note" column="note" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="ordersFieldList.columns">
+	    <![CDATA[
+        id,customer_id,status,note
+	    ]]>
+	</sql>
+
+	<!-- 新增记录 -->
+	<insert id="save" parameterClass="OrdersEntity">
+	    <![CDATA[
+	        INSERT INTO orders (
+	        	id,
+	        	customer_id,
+	        	status,
+	        	note
+	        ) VALUES ( 
+	        		#id#,
+	        	#customerid#,
+	        	#status#,
+	        	#note#
+	        )
+	    ]]>
+<!-- 	<selectKey resultClass="java.lang.Integer" type="post"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey> -->
+	</insert>
+	<!-- 通过ID修改 -->
+	<update id="update" parameterClass="OrdersEntity">
+	    <![CDATA[
+	        UPDATE orders SET 
+		        customer_id = #customerid#,
+		        status=#status#,
+		        note=#note#
+	        WHERE 
+		        id = #id#
+	    ]]>
+	</update>
+
+	<!-- 通过ID删除 -->
+	<delete id="delete">
+	    <![CDATA[
+	        DELETE FROM orders WHERE
+	        id = #id#
+	    ]]>
+	</delete>
+
+	<!-- 通过ID列表批量删除 -->
+	<delete id="deleteByIds" parameterClass="java.lang.String">
+	    <![CDATA[
+	        DELETE FROM orders WHERE
+	        id IN ($ids$)
+	    ]]>
+	</delete>
+
+	<!-- 通过ID查询 -->
+	<select id="getById" resultMap="ordersFieldList">
+		SELECT
+		<include refid="ordersFieldList.columns" />
+	    <![CDATA[
+	        FROM orders 
+	        WHERE 
+		        id = #id#
+	    ]]>
+	</select>
+
+	
+
+	<!-- 查询所有记录 -->
+	<select id="queryAll" resultMap="ordersFieldList">
+		SELECT
+		<include refid="ordersFieldList.columns" />
+	    <![CDATA[
+		    FROM orders
+	    ]]>
+	</select>
+
+	<parameterMap id="parameterMap" class="java.util.HashMap">
+		<parameter property="id" />
+		<parameter property="customer_id" />
+	</parameterMap>
+	<sql id="sql_count">
+		select count(*)
+	</sql>
+	<sql id="sql_select">
+		select *
+	</sql>
+	<sql id="sql_where">
+		from orders
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="id">
+		            <![CDATA[
+					id = #id#
+		            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="customer_id">
+		            <![CDATA[
+					customer_id = #customerid#
+		            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+		            <![CDATA[
+					status = #status#
+		            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="note">
+		            <![CDATA[
+					note = #note#
+		            ]]>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<select id="queryByMap" parameterMap="parameterMap" resultMap="ordersFieldList">
+		<include refid="sql_select" />
+		<include refid="sql_where" />
+	</select>
+</sqlMap>

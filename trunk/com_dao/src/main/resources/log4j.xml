@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">  
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">  
+  
+    <!-- Appenders -->  
+    <appender name="CONSOLE.ERR" class="org.apache.log4j.ConsoleAppender">  
+        <param name="target" value="System.err" />  
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern"  
+                value="%-5p: %c - %m%n" />  
+        </layout>  
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">  
+            <param name="LevelMin" value="warn" />  
+            <param name="LevelMax" value="fatal" />  
+            <param name="AcceptOnMatch" value="false" />  
+        </filter>  
+    </appender>  
+  
+    <appender name="CONSOLE.OUT" class="org.apache.log4j.ConsoleAppender">  
+        <param name="target" value="System.out" />  
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern"  
+                value="%-5p: %c - %m%n" />  
+        </layout>  
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">  
+            <param name="LevelMin" value="debug" />  
+            <param name="LevelMax" value="info" />  
+            <param name="AcceptOnMatch" value="false" />  
+        </filter>  
+    </appender>  
+     	 <!-- 输出日志到文件  文件大小到达指定尺寸的时候产生一个新的文件 -->  
+    <appender name="RAILYFile"   
+        class="org.apache.log4j.RollingFileAppender">  
+        <param name="File" value="/usr/local/tomcat1/app.log"></param>  
+        <param name="ImmediateFlush" value="true"/>  
+        <param name="Threshold" value="info"></param>  
+        <param name="Append" value="true"></param>  
+        <param name="MaxFileSize" value="500KB"></param>  
+        <param name="MaxBackupIndex" value="100"></param>  
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss\} %-5p] [%t] {%c:%L}-%m%n"></param>  
+        </layout>  
+    </appender>
+    <logger name="com.errout">  
+        <level value="debug" />  
+    </logger>  
+  
+  
+    <!-- Root Logger -->  
+    <root>  
+        <priority value="info" />
+<!--         <appender-ref ref="RAILYFile" /> -->
+        <appender-ref ref="CONSOLE.ERR" />  
+        <appender-ref ref="CONSOLE.OUT" />  
+    </root>  
+  
+</log4j:configuration>  
