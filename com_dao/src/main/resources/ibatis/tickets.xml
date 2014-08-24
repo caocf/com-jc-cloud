@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.jc.domain.base.TicketsEntity">
+	<typeAlias alias="ticketsEntity" type="com.jc.domain.base.TicketsEntity" />
+	<resultMap id="ticketsFieldList" class="com.jc.domain.base.TicketsEntity">
+		<result property="id" column="id" />
+		<result property="stub" column="stub" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="ticketsFieldList.columns">
+	    <![CDATA[
+        id, stub
+	    ]]>
+	</sql>
+
+	<!-- 新增记录 -->
+	<insert id="save" parameterClass="ticketsEntity">
+	    <![CDATA[
+	        Replace INTO tickets ( 
+	        	stub
+	        ) VALUES (
+	        	#stub#
+	        )
+	    ]]>
+		<selectKey resultClass="java.lang.Integer" type="post"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS ID
+		</selectKey>
+	</insert>
+</sqlMap>

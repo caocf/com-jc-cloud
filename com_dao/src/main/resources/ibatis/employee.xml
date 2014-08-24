@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.jc.domain.EmployeeEntity">
+	<typeAlias alias="employeeEntity" type="com.jc.domain.EmployeeEntity" />
+	<resultMap id="employeeFieldList" class="com.jc.domain.EmployeeEntity">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="sharding_id" column="sharding_id" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="employeeFieldList.columns">
+	    <![CDATA[
+        id, name,sharding_id
+	    ]]>
+	</sql>
+
+	<!-- 新增记录 -->
+	<insert id="save" parameterClass="employeeEntity">
+	    <![CDATA[
+	        INSERT INTO employee (
+	        	id, 
+	        	name,
+	        	sharding_id
+	        ) VALUES (
+	        	#id#, 
+	        	#name#,
+	        	#sharding_id#
+	        )
+	    ]]>
+	<!-- 	<selectKey resultClass="java.lang.Integer" type="post"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey> -->
+	</insert>
+	<!-- 通过ID修改 -->
+	<update id="update" parameterClass="employeeEntity">
+	    <![CDATA[
+	        UPDATE employee SET 
+		        name = #name#,
+		        sharding_id=#sharding_id#
+	        WHERE 
+		        id = #id#
+	    ]]>
+	</update>
+
+	<!-- 通过ID删除 -->
+	<delete id="delete">
+	    <![CDATA[
+	        DELETE FROM employee WHERE
+	        id = #id#
+	    ]]>
+	</delete>
+
+	<!-- 通过ID列表批量删除 -->
+	<delete id="deleteByIds" parameterClass="java.lang.String">
+	    <![CDATA[
+	        DELETE FROM employee WHERE
+	        id IN ($ids$)
+	    ]]>
+	</delete>
+
+	<!-- 通过ID查询 -->
+	<select id="getById" resultMap="employeeFieldList">
+		SELECT
+		<include refid="employeeFieldList.columns" />
+	    <![CDATA[
+	        FROM employee 
+	        WHERE 
+		        id = #id#
+	    ]]>
+	</select>
+
+	
+
+	<!-- 查询所有记录 -->
+	<select id="queryAll" resultMap="employeeFieldList">
+		SELECT
+		<include refid="employeeFieldList.columns" />
+	    <![CDATA[
+		    FROM employee
+	    ]]>
+	</select>
+
+	<parameterMap id="parameterMap" class="java.util.HashMap">
+		<parameter property="id" />
+		<parameter property="name" />
+		<parameter property="sharding_id" />
+	</parameterMap>
+	<sql id="sql_count">
+		select count(*)
+	</sql>
+	<sql id="sql_select">
+		select *
+	</sql>
+	<sql id="sql_where">
+		from employee
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="id">
+		            <![CDATA[
+					id = #id#
+		            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="name">
+		            <![CDATA[
+					name = #name#
+		            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="sharding_id">
+		            <![CDATA[
+					sharding_id = #sharding_id#
+		            ]]>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<select id="queryByMap" parameterMap="parameterMap" resultMap="employeeFieldList">
+		<include refid="sql_select" />
+		<include refid="sql_where" />
+	</select>
+</sqlMap>
