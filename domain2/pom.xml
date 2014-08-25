@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+	<groupId>com.website</groupId>
+	<artifactId>website-parent </artifactId>
+	<version>1.0.0</version>
+	<relativePath >../com_website_parent/pom.xml</relativePath>
+	</parent>
+
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com</groupId>
+	<artifactId>domain1</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1</version>
+	<name>domain2 Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+
+	<build>
+		<finalName>domain2</finalName>
+	</build>
+</project>

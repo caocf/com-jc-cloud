@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd  
+        ">
+ <!--        RegistryDirectory这个类维护着从本地方法到远程方法的映射关系，远程参数到本地方法的调用关系等。
+		在注册过程中的几个主要类
+		ZookeeperRegistry：负责与zookeeper进行交互
+		RegistryProtocol：从注册中心获取可用服务，或者将服务注册到zookeeper，然后提供服务或者提供调用代理。
+		RegistryDirectory：维护着所有可用的远程Invoker或者本地的Invoker。这个类实现了NotifyListner。
+		NotifyListener：负责RegistryDirectory和ZookeeperRegistry的通信。
+		FailbackRegistry：继承自Registry，实现了失败重试机制。 -->
+	<!-- Application name -->
+	<dubbo:application name="domain2_consumer" />
+	<dubbo:registry address="zookeeper://192.168.128.131:2181" file="${user.home}/output/customer.cache" />
+<!-- 			注意：
+		文件的路径，应用可以根据需要调整，保证这个文件不会在发布过程中被清除。
+		如果有多个应用进程注意不要使用同一个文件，避免内容被覆盖。
+		这个文件会缓存：
+		注册中心的列表
+		服务提供者列表
+		有了这项配置后，当应用重启过程中，Dubbo注册中心不可用时则应用会从这个缓存文件读取服务提供者列表的信息，进一步保证应用可靠性。 -->
+	<dubbo:reference id="firstDubboService" owner="jackychen"
+		interface="com.jc.order.service.bussiness.order.IFirstDubboService" check="false" version="1.0.0" />
+</beans>    
