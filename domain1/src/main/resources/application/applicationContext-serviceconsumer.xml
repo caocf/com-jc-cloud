@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd  
+        ">
+	<!-- RegistryDirectory这个类维护着从本地方法到远程方法的映射关系，远程参数到本地方法的调用关系等。 在注册过程中的几个主要类 
+		ZookeeperRegistry：负责与zookeeper进行交互 RegistryProtocol：从注册中心获取可用服务，或者将服务注册到zookeeper，然后提供服务或者提供调用代理。 
+		RegistryDirectory：维护着所有可用的远程Invoker或者本地的Invoker。这个类实现了NotifyListner。 NotifyListener：负责RegistryDirectory和ZookeeperRegistry的通信。 
+		FailbackRegistry：继承自Registry，实现了失败重试机制。 -->
+	<!-- Application name -->
+	<dubbo:application name="domain1_consumer" />
+	<dubbo:registry address="zookeeper://192.168.128.131:2181" />
+	<dubbo:reference id="firstDubboServiceRemote"
+		interface="com.jc.order.service.bussiness.order.IFirstDubboService"
+		check="false" />
+</beans>    
