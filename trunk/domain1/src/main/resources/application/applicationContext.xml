@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+        ">
+	<!-- Annotation Initilization -->
+	<context:annotation-config />
+	<!-- <import resource="lib/com_dao*/application/applicationContext.xml" />
+	<import resource="lib/com_order_service*/application/applicationContext.xml" /> -->
+	<!-- 扫描制定的包，注解 -->
+	<context:component-scan base-package="com.site.*,com.jc.dao.app.*,com.jc.service.bussiness.order.*"
+		scoped-proxy="interfaces" />
+	<!-- 读取Properties文件 -->
+	<bean id="propertyPlaceholderConfigurer1"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/properties/jdbc.properties</value>
+				<value>classpath:/properties/systemConfig.properties</value>
+			</list>
+		</property>
+	</bean>
+	<import resource="applicationContext-serviceconsumer.xml" />
+	<!--  <import resource="lib/com_dao*/application/applicationContext-datasource.xml" /> -->
+	<!-- <import resource="applicationContext-mq.xml" /> -->
+	<!-- <import resource="applicationContext-aopTx.xml" /> -->
+
+</beans>

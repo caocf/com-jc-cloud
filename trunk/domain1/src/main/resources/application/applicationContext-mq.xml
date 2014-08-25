@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        ">
+	<bean id="producerSingleton" class="com.mq.ProducerSingleton">
+		<property name="zkHost">
+			<value>${zk1.host}</value>
+		</property>
+		<property name="port">
+			<value>${zk1.port}</value>
+		</property>
+	</bean>
+	<bean id="mqManage" class="com.mq.MqManage" />
+</beans>
